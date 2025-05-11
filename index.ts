@@ -1,7 +1,9 @@
 import express from 'express'
 import { calculateBmi }  from './src/bmiCalculator'
+import { calculateExercises } from './src/exerciseCalculator';
 
-const app = express()
+const app = express();
+app.use(express.json());
 
 app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack!')
@@ -24,6 +26,22 @@ app.get('/bmi', (req, res) => {
     bmi
   })
 })
+
+app.post('/exercises', (req, res) => {
+  const { daily_exercises, target } = req.body;
+
+  if (!daily_exercises || target === undefined) {
+    return res.status(400).json({ error: 'parameters missing' });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  if (!Array.isArray(daily_exercises) || !daily_exercises.every(h => typeof h === 'number') || isNaN(Number(target))) {
+    return res.status(400).json({ error: 'malformatted parameters' });
+  }
+
+  const result = calculateExercises(daily_exercises, Number(target));
+  return res.json(result);
+});
 
 const PORT = 3003
 app.listen(PORT, () => {

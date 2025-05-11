@@ -1,5 +1,3 @@
-// src/exerciseCalculator.ts
-
 interface ExerciseResult {
   periodLength: number;
   trainingDays: number;
