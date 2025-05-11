@@ -1,11 +1,18 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es6",
     "module": "commonjs",
-    "strict": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "strictBindCallApply": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
     "esModuleInterop": true,
-    "outDir": "./dist",
-    "noImplicitAny": true
+    "declaration": true
   },
-  "include": ["src"],
+  "include": ["src", "index.ts"]
 }
