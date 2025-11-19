@@ -23,10 +23,12 @@ export const calculateExercises = (
   if (average >= target) {
     rating = 3;
     ratingDescription = 'Excellent, target achieved!';
-  } else if (average >= target * 0.75) {
+  } 
+  else if (average >= target * 0.75) {
     rating = 2;
     ratingDescription = 'Not too bad but could be better';
-  } else {
+  } 
+  else {
     rating = 1;
     ratingDescription = 'You need to put in more effort';
   }
@@ -42,20 +44,21 @@ export const calculateExercises = (
   };
 };
 
-const args = process.argv.slice(2);
+// Example in comand: npm run calculateExercises -- 2 3 0 2 4.5 0 3 1
+// First 3 arguments are ommitted (node, script path, ...), so first is target, rest are daily hours
+const hoursPerDayArgs = process.argv.slice(2);
 
-if (args.length < 2) {
-  console.log("Usage: npm run calculateExercises -- <target> <day1> <day2> ...");
+if (hoursPerDayArgs.length < 2) {
+  console.warn("Usage: npm run calculateExercises -- <target> <day1> <day2> ... <dayN>; at least two arguments required.");
   process.exit(1);
 }
 
-const [targetArg, ...hourArgs] = args;
-
-const target = Number(targetArg);
-const dailyHours = hourArgs.map(Number);
+const [hoursTargetArg, ...hoursPerDayWithoutTarget] = hoursPerDayArgs;
+const target = Number(hoursTargetArg);
+const dailyHours = hoursPerDayWithoutTarget.map(Number);
 
 if (isNaN(target) || dailyHours.some(h => isNaN(h))) {
-  console.log("All arguments must be numbers.");
+  console.error("All arguments must be numbers.");
   process.exit(1);
 }
 

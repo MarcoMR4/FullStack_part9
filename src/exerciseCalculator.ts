@@ -23,10 +23,12 @@ export const calculateExercises = (
   if (average >= target) {
     rating = 3;
     ratingDescription = 'Excellent, target achieved!';
-  } else if (average >= target * 0.75) {
+  } 
+  else if (average >= target * 0.75) {
     rating = 2;
     ratingDescription = 'Not too bad but could be better';
-  } else {
+  } 
+  else {
     rating = 1;
     ratingDescription = 'You need to put in more effort';
   }

@@ -7,7 +7,7 @@
     "calculateBmi": "ts-node ./src/bmiCalculator.ts",
     "calculateBmiWithCommand": "ts-node ./src/bmiCalculatorComand.ts",
     "calculateExercises": "ts-node ./src/exerciseCalculator.ts",
-    "calculateExercises2": "ts-node ./src/exerciseCalculatorComand.ts",
+    "calculateExercisesWithCommand": "ts-node ./src/exerciseCalculatorComand.ts",
     "start": "ts-node index.ts",
     "dev": "ts-node-dev index.ts",
     "lint": "eslint --ext .ts ."
