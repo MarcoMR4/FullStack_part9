@@ -13,9 +13,9 @@
     "lint": "eslint --ext .ts ."
   },
   "keywords": [],
-  "author": "",
+  "author": "Marco MR4",
   "license": "ISC",
-  "description": "",
+  "description": "Typescript learning exercises part 9 Full Stack Open 2024",
   "devDependencies": {
     "@types/express": "^4.17.18",
     "@typescript-eslint/eslint-plugin": "^8.32.0",
