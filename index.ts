@@ -9,6 +9,10 @@ app.get('/hello', (_req, res) => {
   res.send('Hello Full Stack!')
 })
 
+app.get('/', (_req, res) => {
+  res.send('Welcome to the BMI and Exercise Calculator mini API with TypeScript and Express!')
+})
+
 app.get('/bmi', (req, res) => {
   const { height, weight } = req.query
 
