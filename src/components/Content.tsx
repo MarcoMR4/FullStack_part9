@@ -1,10 +1,7 @@
-interface coursePart {
-    name: string;
-    exerciseCount: number;
-}
+import type { CoursePart } from "../types";
 
 interface contentProps {
-    courseParts: coursePart[];
+    courseParts: CoursePart[];
 }
 
 const Content = (props: contentProps) => {
