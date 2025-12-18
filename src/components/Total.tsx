@@ -4,7 +4,7 @@ interface totalProps {
 
 const Total = (props: totalProps) => {
     return (
-        <div>
+        <div style={{ marginTop: "5%", fontWeight: 'bold', fontSize: '1.3em' }}>
             Number of exercises : {props.total}
         </div>
     );
