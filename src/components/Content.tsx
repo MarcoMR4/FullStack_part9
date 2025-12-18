@@ -1,4 +1,4 @@
-import type { CoursePart } from "../types";
+import type { CoursePart } from "../types/courses";
 
 interface contentProps {
     courseParts: CoursePart[];

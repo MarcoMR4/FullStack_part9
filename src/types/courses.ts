@@ -1,3 +1,5 @@
+// src/types/courses.ts
+
 interface CoursePartBase {
   name: string;
   exerciseCount: number;
