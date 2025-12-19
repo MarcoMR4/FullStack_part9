@@ -1,25 +1,13 @@
-import { useEffect, useState } from 'react';
 import type { NonSensitiveDiaryEntry } from '../../types/diaries';
 
-const List = () => {
-    const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([]);
+interface ListProps {
+    diaries: NonSensitiveDiaryEntry[];
+}
 
-    useEffect(() => {
-        const fetchDiaries = async () => {
-            try {
-                const response = await fetch('http://localhost:3000/api/diaries');
-                const data = await response.json();
-                setDiaries(data);
-            } catch (error) {
-                console.error("Error fetching diaries:", error);
-            }
-        };
-
-        fetchDiaries();
-    }, []);
-
+const List = ({ diaries }: ListProps) => {
     return (
         <div>
+            <h2>Diary entries</h2>
             {diaries.map(diary => (
                 <div key={diary.id}>
                     <h3>{diary.date}</h3>

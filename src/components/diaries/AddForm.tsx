@@ -1,7 +1,11 @@
 import { useState } from "react";
-import type { NewDiaryEntry, Weather, Visibility } from "../../types/diaries";
+import type { NewDiaryEntry, Weather, Visibility, DiaryEntry } from "../../types/diaries";
 
-const AddForm = () => {
+interface AddFormProps {
+    onNewDiaryAdded: (entry: DiaryEntry) => void;
+}
+
+const AddForm = ({ onNewDiaryAdded }: AddFormProps) => {
     const [date, setDate] = useState('');
     const [weather, setWeather] = useState<Weather | ''>('');
     const [visibility, setVisibility] = useState<Visibility | ''>('');
@@ -17,13 +21,17 @@ const AddForm = () => {
         };
 
         try {
-            await fetch('http://localhost:3000/api/diaries', {
+            const response = await fetch('http://localhost:3000/api/diaries', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(entry)
             });
+            
+            const data = await response.json();
+            onNewDiaryAdded(data);
+
             setDate('');
             setWeather('');
             setVisibility('');
