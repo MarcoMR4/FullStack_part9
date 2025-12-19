@@ -6,6 +6,7 @@ import type { NonSensitiveDiaryEntry, DiaryEntry } from "./types/diaries";
 
 const App = () => {
   const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([]);
+  const [showAddForm, setShowAddForm] = useState(false);
 
   useEffect(() => {
     const fetchDiaries = async () => {
@@ -23,12 +24,14 @@ const App = () => {
 
   const onNewDiaryAdded = (newDiary: DiaryEntry) => {
     setDiaries(prev => prev.concat(newDiary));
+    setShowAddForm(false);
   };
 
   return (
     <div>
       <Header />
-      <AddForm onNewDiaryAdded={onNewDiaryAdded} />
+      <button onClick={() => setShowAddForm(!showAddForm)}>Add new diary</button>
+      {showAddForm && <AddForm onNewDiaryAdded={onNewDiaryAdded} />}
       <List diaries={diaries} />
     </div>
   );
