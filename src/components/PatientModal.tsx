@@ -53,7 +53,7 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
         })
         .catch(err => {
           setError("No se pudo cargar la información del paciente.");
-          console.error('Error loading patient information', err);
+          console.error('Error loading patient information ', err);
           setLoading(false);
         });
     } else {

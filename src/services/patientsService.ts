@@ -1,11 +1,8 @@
-import axios from "axios";
+import { v4 as uuidv4 } from 'uuid';
 import { 
   Patient,
   PatientFormValues 
 } from "../types/patients";
-
-
-import { apiBaseUrl } from "../constants";
 import patients from "../../data/patients";
 
 const getPatients = async () => {
@@ -25,12 +22,13 @@ const getPatientById = async (id: string) => {
 }
 
 const create = async (object: PatientFormValues) => {
-  const { data } = await axios.post<Patient>(
-    `${apiBaseUrl}/patients`,
-    object
-  );
-
-  return data;
+  const newPatient: Patient = {
+    id: uuidv4(),
+    ...object,
+    entries: []
+  };
+  (patients as Patient[]).push(newPatient);
+  return newPatient;
 };
 
 export default {
