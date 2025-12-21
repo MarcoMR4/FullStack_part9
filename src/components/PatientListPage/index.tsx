@@ -1,9 +1,23 @@
-import { useState } from "react";
-import { Box, Table, Button, TableHead, Typography, TableCell, TableRow, TableBody } from '@mui/material';
+import React, { useState } from "react";
+import { 
+  Box, 
+  Table, 
+  Button, 
+  TableHead, 
+  Typography, 
+  TableCell, 
+  TableRow, 
+  TableBody
+} from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from 'axios';
 
-import { PatientFormValues, Patient } from "../../types/patients";
+import { 
+  PatientFormValues, 
+  Patient 
+} from "../../types/patients";
 import AddPatientModal from "../AddPatientModal";
+import PatientModal from "../PatientModal";
 
 import HealthRatingBar from "../HealthRatingBar";
 
@@ -18,12 +32,23 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
 
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
+  const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
+  const [patientModalOpen, setPatientModalOpen] = useState<boolean>(false);
 
   const openModal = (): void => setModalOpen(true);
 
   const closeModal = (): void => {
     setModalOpen(false);
     setError(undefined);
+  };
+
+  const openPatientModal = (id: string) => {
+    setSelectedPatientId(id);
+    setPatientModalOpen(true);
+  };
+  const closePatientModal = () => {
+    setPatientModalOpen(false);
+    setSelectedPatientId(null);
   };
 
   const submitNewPatient = async (values: PatientFormValues) => {
@@ -61,6 +86,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
             <TableCell>Gender</TableCell>
             <TableCell>Occupation</TableCell>
             <TableCell>Health Rating</TableCell>
+            <TableCell>Details</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -72,6 +98,11 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
               <TableCell>
                 <HealthRatingBar showText={false} rating={1} />
               </TableCell>
+              <TableCell>
+                <Button variant="text" onClick={() => openPatientModal(patient.id)}>
+                  {React.createElement(VisibilityIcon)}
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -81,6 +112,11 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         onSubmit={submitNewPatient}
         error={error}
         onClose={closeModal}
+      />
+      <PatientModal
+        open={patientModalOpen}
+        onClose={closePatientModal}
+        patientId={selectedPatientId}
       />
       <Button variant="contained" onClick={() => openModal()}>
         Add New Patient
