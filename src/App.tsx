@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Route, Link, Routes } from "react-router-dom";
 import { Button, Divider, Container, Typography } from '@mui/material';
 
 import { apiBaseUrl } from "./constants";
-import { Patient, Gender } from "./types";
+import { Patient, Gender } from "./types/patients";
 
 import PatientListPage from "./components/PatientListPage";
 
