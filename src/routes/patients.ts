@@ -8,6 +8,15 @@ patientsRouter.get('/', async (_req, res) => {
   res.json(data);
 })
 
+patientsRouter.get('/:id', async (_req, res) => {
+  const data = await patients.getPatientById(_req.params.id);
+  if (data) {
+    res.json(data);
+  } else {
+    res.status(404).send(`Patient with id ${_req.params.id} not found`);
+  }
+});
+
 patientsRouter.post('/', (_req, res) => {
   res.send('Saving a patient!');
 })

@@ -14,6 +14,16 @@ const getPatients = async () => {
   );
 };
 
+const getPatientById = async (id: string) => {
+  const patient = patients.find(p => p.id === id);
+  if (!patient) 
+    return Promise.resolve(null);
+  return Promise.resolve({
+    ...patient,
+    entries: []
+  });
+}
+
 const create = async (object: PatientFormValues) => {
   const { data } = await axios.post<Patient>(
     `${apiBaseUrl}/patients`,
@@ -24,6 +34,8 @@ const create = async (object: PatientFormValues) => {
 };
 
 export default {
-  getPatients, create
+  getPatients, 
+  getPatientById,
+  create
 };
 
