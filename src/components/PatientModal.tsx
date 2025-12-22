@@ -7,7 +7,8 @@ import {
     DialogActions, 
     Button, 
     Typography, 
-    CircularProgress 
+    CircularProgress,
+    Divider
 } from "@mui/material";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
@@ -63,7 +64,10 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>Patient data</DialogTitle>
+      <DialogTitle>
+        <b>Patient data</b>
+      </DialogTitle>
+      <Divider />
       <DialogContent>
         {loading ? (
           <CircularProgress />
@@ -83,8 +87,9 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
           <Typography>Select a patient to view information.</Typography>
         )}
       </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary" variant="contained">Cerrar</Button>
+      <Divider />
+      <DialogActions style={{padding: '20px'}}>
+        <Button onClick={onClose} color="primary" variant="contained">Close</Button>
       </DialogActions>
     </Dialog>
   );
