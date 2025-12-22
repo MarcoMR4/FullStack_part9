@@ -82,11 +82,23 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
             <Typography><b>Occupation:</b> {patient.occupation}</Typography>
                 {patient.dateOfBirth && <Typography><b>Date of Birth:</b> {patient.dateOfBirth}</Typography>}
             <Typography><b>Medical Entries:</b> {patient.entries.length}</Typography>
-          </>
-        ) : (
-          <Typography>Select a patient to view information.</Typography>
-        )}
-      </DialogContent>
+            Entries: 
+            {patient.entries.length === 0 ? (
+              <Typography>No medical entries available.</Typography>
+            ) : (
+              patient.entries.map(entry => (
+                <div key={entry.id} style={{ marginBottom: '10px' }}> 
+                  <Typography><b>Date:</b> {entry.date}</Typography>
+                  <Typography><b>Type:</b> {entry.type}</Typography>
+                  <Typography><b>Description:</b> {entry.description}</Typography>    )
+              </div>
+            ))
+          )}
+        </>
+      ) : (
+        <Typography>Select a patient to view information.</Typography>
+      )}
+    </DialogContent>
       <Divider />
       <DialogActions style={{padding: '20px'}}>
         <Button onClick={onClose} color="primary" variant="contained">Close</Button>
