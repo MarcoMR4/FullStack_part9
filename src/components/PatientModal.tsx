@@ -1,23 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, 
+{ 
+  useEffect, 
+  useState 
+} from "react";
 import axios from "axios";
+import { apiBaseUrl } from "../constants";
+
+import { 
+  Patient, 
+  Gender
+} from "../types/patients";
+
 import {
-    Dialog, 
-    DialogTitle, 
-    DialogContent,
-    DialogActions, 
-    Button, 
-    Typography, 
-    CircularProgress,
-    Divider
+  Dialog, 
+  DialogTitle, 
+  DialogContent,
+  DialogActions, 
+  Button, 
+  Typography, 
+  CircularProgress,
+  Divider
 } from "@mui/material";
 import FemaleIcon from '@mui/icons-material/Female';
 import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
-import { 
-    Patient, 
-    Gender 
-} from "../types/patients";
-import { apiBaseUrl } from "../constants";
+
+import PatientEntry from "./PatientEntry";
+
 
 interface PatientModalProps {
   open: boolean;
@@ -53,7 +62,7 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
           setLoading(false);
         })
         .catch(err => {
-          setError("No se pudo cargar la información del paciente.");
+          setError("Patient information could not be loaded.");
           console.error('Error loading patient information ', err);
           setLoading(false);
         });
@@ -63,12 +72,19 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
   }, [open, patientId]);
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog 
+      open={open}
+      onClose={onClose}
+      maxWidth="lg"
+      PaperProps={{
+        style: { minWidth: '80vw', minHeight: 80 }
+      }}
+    >
       <DialogTitle>
         <b>Patient data</b>
       </DialogTitle>
       <Divider />
-      <DialogContent>
+      <DialogContent sx={{ overflowY: 'auto', maxHeight: '60vh' }}>
         {loading ? (
           <CircularProgress />
         ) : error ? (
@@ -82,18 +98,13 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
             <Typography><b>Occupation:</b> {patient.occupation}</Typography>
                 {patient.dateOfBirth && <Typography><b>Date of Birth:</b> {patient.dateOfBirth}</Typography>}
             <Typography><b>Medical Entries:</b> {patient.entries.length}</Typography>
-            Entries: 
             {patient.entries.length === 0 ? (
               <Typography>No medical entries available.</Typography>
             ) : (
-              patient.entries.map(entry => (
-                <div key={entry.id} style={{ marginBottom: '10px' }}> 
-                  <Typography><b>Date:</b> {entry.date}</Typography>
-                  <Typography><b>Type:</b> {entry.type}</Typography>
-                  <Typography><b>Description:</b> {entry.description}</Typography>    )
+              <div style={{ marginTop: 8 }}>
+                {patient.entries.map(entry => <PatientEntry key={entry.id} entry={entry} />)}
               </div>
-            ))
-          )}
+            )}
         </>
       ) : (
         <Typography>Select a patient to view information.</Typography>

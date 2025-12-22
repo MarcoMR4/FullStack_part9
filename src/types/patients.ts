@@ -70,6 +70,6 @@ export type EntryWithoutId = UnionOmit<Entry, 'id'>;
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
-export type PatientWithoutSsn = Omit<Patient, "ssn" | "entries">;
+export type PatientWithoutSsn = Omit<Patient, "ssn">;
 
 export type NonSensitivePatient = Omit<Patient, "ssn" | "entries">;
