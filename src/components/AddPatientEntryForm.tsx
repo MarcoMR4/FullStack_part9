@@ -1,0 +1,184 @@
+
+import React, { useState } from "react";
+import { 
+	Select, 
+	MenuItem, 
+	InputLabel, 
+	FormControl, 
+	Box,
+	SelectChangeEvent
+} from "@mui/material";
+import GeneralForm, { GeneralFormField } from "./common/generalForm";
+
+const DIAGNOSIS_CODES = [
+	{ value: "S62.5", label: "S62.5" },
+	{ value: "Z57.1", label: "Z57.1" },
+	{ value: "Z74.3", label: "Z74.3" },
+	{ value: "M51.2", label: "M51.2" },
+];
+
+const ENTRY_TYPES = [
+	{ value: "HealthCheck", label: "Health Check" },
+	{ value: "Hospital", label: "Hospital" },
+	{ value: "OccupationalHealthcare", label: "Occupational Healthcare" },
+];
+
+const getFieldsForType = (type: string): GeneralFormField[] => {
+	const commonFields: GeneralFormField[] = [
+		{
+			name: "date",
+			label: "Date",
+			type: "date",
+			required: true,
+			validate: (value) => !/^\d{4}-\d{2}-\d{2}$/.test(value || "") ? "Date must be in YYYY-MM-DD format" : null,
+		},
+		{
+			name: "specialist",
+			label: "Specialist",
+			type: "text",
+			required: true,
+		},
+		{
+			name: "description",
+			label: "Description",
+			type: "text",
+			required: true,
+		},
+		{
+			name: "diagnosisCodes",
+			label: "Diagnosis Codes",
+			type: "select",
+			required: true,
+			options: DIAGNOSIS_CODES,
+			initialValue: [],
+			validate: (value) => (Array.isArray(value) && value.length > 0 ? null : "Select at least one code"),
+		},
+	];
+
+	if (type === "HealthCheck") {
+		return [
+			...commonFields,
+			{
+				name: "healthCheckRating",
+				label: "Health Check Rating",
+				type: "select",
+				required: true,
+				options: [
+					{ value: 0, label: "Healthy" },
+					{ value: 1, label: "Low Risk" },
+					{ value: 2, label: "High Risk" },
+					{ value: 3, label: "Critical Risk" },
+				],
+			},
+		];
+	}
+	if (type === "Hospital") {
+		return [
+			...commonFields,
+			{
+				name: "dischargeDate",
+				label: "Discharge Date",
+				type: "date",
+				required: true,
+				validate: (value) => !/^\d{4}-\d{2}-\d{2}$/.test(value || "") ? "Date must be in YYYY-MM-DD format" : null,
+			},
+			{
+				name: "dischargeCriteria",
+				label: "Discharge Criteria",
+				type: "text",
+				required: true,
+			},
+		];
+	}
+	if (type === "OccupationalHealthcare") {
+		return [
+			...commonFields,
+			{
+				name: "employerName",
+				label: "Employer Name",
+				type: "text",
+				required: true,
+			},
+			{
+				name: "sickLeaveStartDate",
+				label: "Sick Leave Start Date",
+				type: "date",
+				required: false,
+				validate: (value) => value && !/^\d{4}-\d{2}-\d{2}$/.test(value) ? "Date must be in YYYY-MM-DD format" : null,
+			},
+			{
+				name: "sickLeaveEndDate",
+				label: "Sick Leave End Date",
+				type: "date",
+				required: false,
+				validate: (value) => value && !/^\d{4}-\d{2}-\d{2}$/.test(value) ? "Date must be in YYYY-MM-DD format" : null,
+			},
+		];
+	}
+	return commonFields;
+};
+
+
+const AddPatientEntryForm: React.FC = () => {
+	const [entryType, setEntryType] = useState<string>("HealthCheck");
+	const [formKey, setFormKey] = useState<number>(0); // For resetting form
+
+	const handleTypeChange = (e: SelectChangeEvent<string>) => {
+		setEntryType(e.target.value as string);
+		setFormKey((prev) => prev + 1); // Reset form
+	};
+
+	const handleSubmit = (values: Record<string, any>) => {
+		// Transform diagnosisCodes to array if not already
+		const entry = { type: entryType, ...values };
+		console.log("New entry:", entry);
+		setFormKey((prev) => prev + 1); // Reset form after submit
+	};
+
+	const handleCancel = () => {
+		setFormKey((prev) => prev + 1);
+	};
+
+
+	// Custom rendering for multiple select
+	const fields: GeneralFormField[] = getFieldsForType(entryType).map((field) => {
+		if (field.name === "diagnosisCodes") {
+			return {
+				...field,
+				type: "select" as const,
+				options: DIAGNOSIS_CODES,
+			};
+		}
+		return field;
+	});
+
+	return (
+		<Box border={1} borderRadius={2} borderColor="grey.400" p={2} mb={2}>
+			<FormControl fullWidth sx={{ mb: 2 }}>
+				<InputLabel id="entry-type-label">Entry Type</InputLabel>
+				<Select
+					labelId="entry-type-label"
+					value={entryType}
+					label="Entry Type"
+					onChange={handleTypeChange}
+				>
+					{ENTRY_TYPES.map((option) => (
+						<MenuItem key={option.value} value={option.value}>
+							{option.label}
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
+			<GeneralForm
+				key={formKey}
+				fields={fields}
+				onSubmit={handleSubmit}
+				onCancel={handleCancel}
+				submitLabel="Add Entry"
+				cancelLabel="Cancel"
+			/>
+		</Box>
+	);
+};
+
+export default AddPatientEntryForm;

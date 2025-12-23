@@ -26,6 +26,7 @@ import MaleIcon from '@mui/icons-material/Male';
 import TransgenderIcon from '@mui/icons-material/Transgender';
 
 import PatientEntry from "./PatientEntry";
+import AddPatientEntryForm from "./AddPatientEntryForm";
 
 
 interface PatientModalProps {
@@ -48,9 +49,11 @@ const genderIcon = (gender: Gender) => {
 };
 
 const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId }) => {
+
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showEntryForm, setShowEntryForm] = useState(false);
 
   useEffect(() => {
     if (open && patientId) {
@@ -70,6 +73,7 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
       setPatient(null);
     }
   }, [open, patientId]);
+
 
   return (
     <Dialog 
@@ -98,6 +102,19 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
             <Typography><b>Occupation:</b> {patient.occupation}</Typography>
                 {patient.dateOfBirth && <Typography><b>Date of Birth:</b> {patient.dateOfBirth}</Typography>}
             <Typography><b>Medical Entries:</b> {patient.entries.length}</Typography>
+            <Button
+              variant="outlined"
+              color="primary"
+              style={{ margin: '16px 0' }}
+              onClick={() => setShowEntryForm((prev) => !prev)}
+            >
+              {showEntryForm ? "Close entry form" : "Add entry"}
+            </Button>
+            {showEntryForm && (
+              <div style={{ margin: '16px 0' }}>
+                <AddPatientEntryForm />
+              </div>
+            )}
             {patient.entries.length === 0 ? (
               <Typography>No medical entries available.</Typography>
             ) : (
@@ -105,11 +122,11 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
                 {patient.entries.map(entry => <PatientEntry key={entry.id} entry={entry} />)}
               </div>
             )}
-        </>
-      ) : (
-        <Typography>Select a patient to view information.</Typography>
-      )}
-    </DialogContent>
+          </>
+        ) : (
+          <Typography>Select a patient to view information.</Typography>
+        )}
+      </DialogContent>
       <Divider />
       <DialogActions style={{padding: '20px'}}>
         <Button onClick={onClose} color="primary" variant="contained">Close</Button>

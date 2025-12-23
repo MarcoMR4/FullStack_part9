@@ -101,7 +101,15 @@ const GeneralForm: React.FC<GeneralFormProps> = ({
 									labelId={`${field.name}-label`}
 									value={formValues[field.name]}
 									label={field.label}
-									onChange={(e) => handleChange(field.name, e.target.value)}
+									onChange={(e) => {
+										if (field.name === "diagnosisCodes") {
+											handleChange(field.name, typeof e.target.value === "string" ? e.target.value.split(",") : e.target.value);
+										} else {
+											handleChange(field.name, e.target.value);
+										}
+									}}
+									multiple={field.name === "diagnosisCodes"}
+									renderValue={field.name === "diagnosisCodes" ? (selected) => (Array.isArray(selected) ? selected.join(", ") : "") : undefined}
 								>
 									{field.options?.map((option) => (
 										<MenuItem key={option.value} value={option.value}>
