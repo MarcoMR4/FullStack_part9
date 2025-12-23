@@ -1,124 +1,80 @@
-import { useState, SyntheticEvent } from "react";
 
-import {  TextField, InputLabel, MenuItem, Select, Grid, Button, SelectChangeEvent } from '@mui/material';
-
-import { PatientFormValues, Gender } from "../../types/patients";
+import { 
+  PatientFormValues, 
+  Gender 
+} from "../../types/patients";
+import GeneralForm, { GeneralFormField } from "../common/generalForm";
 
 interface Props {
   onCancel: () => void;
   onSubmit: (values: PatientFormValues) => void;
 }
 
-interface GenderOption{
-  value: Gender;
-  label: string;
-}
-
-const genderOptions: GenderOption[] = Object.values(Gender).map(v => ({
-  value: v, label: v.toString()
-}));
+const genderOptions = Object.values(Gender).map((v) => ({ value: v, label: v.toString() }));
 
 const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
-  const [name, setName] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [ssn, setSsn] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [gender, setGender] = useState(Gender.Other);
+  const fields: GeneralFormField[] = [
+    {
+      name: "name",
+      label: "Name",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "ssn",
+      label: "Social security number",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "dateOfBirth",
+      label: "Date of Birth",
+      type: "date",
+      required: true,
+      validate: (value) => {
+        // Simple date format check (YYYY-MM-DD)
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(value || "")) {
+          return "Date must be in YYYY-MM-DD format";
+        }
+        return null;
+      },
+    },
+    {
+      name: "occupation",
+      label: "Occupation",
+      type: "text",
+      required: true,
+    },
+    {
+      name: "gender",
+      label: "Gender",
+      type: "select",
+      required: true,
+      options: genderOptions,
+      initialValue: Gender.Other,
+    },
+  ];
 
-  const onGenderChange = (event: SelectChangeEvent<string>) => {
-    event.preventDefault();
-    if ( typeof event.target.value === "string") {
-      const value = event.target.value;
-      const gender = Object.values(Gender).find(g => g.toString() === value);
-      if (gender) {
-        setGender(gender);
-      }
-    }
-  };
-
-  const addPatient = (event: SyntheticEvent) => {
-    event.preventDefault();
-    onSubmit({
-      name,
-      occupation,
-      ssn,
-      dateOfBirth,
-      gender
-    });
+  const handleSubmit = (values: Record<string, any>) => {
+    // Ensure all required fields are present and gender is cast to Gender enum
+    const patient = {
+      name: values.name,
+      occupation: values.occupation,
+      ssn: values.ssn,
+      dateOfBirth: values.dateOfBirth,
+      gender: values.gender as Gender,
+    } as PatientFormValues;
+    onSubmit(patient);
   };
 
   return (
-    <div>
-      <form onSubmit={addPatient}>
-        <TextField
-          label="Name"
-          fullWidth 
-          value={name}
-          onChange={({ target }) => setName(target.value)}
-        />
-        <TextField
-          label="Social security number"
-          fullWidth
-          value={ssn}
-          onChange={({ target }) => setSsn(target.value)}
-        />
-        <TextField
-          label="Date of birth"
-          placeholder="YYYY-MM-DD"
-          fullWidth
-          value={dateOfBirth}
-          onChange={({ target }) => setDateOfBirth(target.value)}
-        />
-        <TextField
-          label="Occupation"
-          fullWidth
-          value={occupation}
-          onChange={({ target }) => setOccupation(target.value)}
-        />
-
-        <InputLabel style={{ marginTop: 20 }}>Gender</InputLabel>
-        <Select
-          label="Gender"
-          fullWidth
-          value={gender}
-          onChange={onGenderChange}
-        >
-        {genderOptions.map(option =>
-          <MenuItem
-            key={option.label}
-            value={option.value}
-          >
-            {option.label
-          }</MenuItem>
-        )}
-        </Select>
-
-        <Grid>
-          <Grid item>
-            <Button
-              color="secondary"
-              variant="contained"
-              style={{ float: "left" }}
-              type="button"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              style={{
-                float: "right",
-              }}
-              type="submit"
-              variant="contained"
-            >
-              Add
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
-    </div>
+    <GeneralForm
+      fields={fields}
+      onSubmit={handleSubmit}
+      onCancel={onCancel}
+      submitLabel="Add"
+      cancelLabel="Cancel"
+    />
   );
 };
 
