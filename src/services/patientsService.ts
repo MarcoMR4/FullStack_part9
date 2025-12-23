@@ -19,7 +19,7 @@ const getPatientById = async (id: string) => {
   return Promise.resolve(patient);    
 }
 
-const create = async (object: PatientFormValues) => {
+const addPatient = async (object: PatientFormValues) => {
   const newPatient: Patient = {
     id: uuidv4(),
     ...object,
@@ -40,7 +40,7 @@ const addPatientEntry = async (idPatient: string, entry: Entry) => {
 export default {
   getPatients, 
   getPatientById,
-  create,
+  addPatient,
   addPatientEntry
 };
 

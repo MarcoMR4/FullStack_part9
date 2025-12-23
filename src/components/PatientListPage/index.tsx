@@ -21,7 +21,7 @@ import PatientModal from "../PatientModal";
 
 import HealthRatingBar from "../HealthRatingBar";
 
-import patientService from "../../services/patientsService";
+import { apiBaseUrl} from "../../constants";
 
 interface Props {
   patients : Patient[]
@@ -53,8 +53,8 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
-      const patient = await patientService.create(values);
-      setPatients(patients.concat(patient));
+      const patient = await axios.post<Patient>(apiBaseUrl + "/patients", values);
+      setPatients(patients.concat(patient.data));
       setModalOpen(false);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
