@@ -18,7 +18,7 @@ export interface GeneralFormField {
 	label: string;
 	type: FieldType;
 	required?: boolean;
-	options?: { value: string; label: string }[]; // For select
+	options?: { value: string | number; label: string }[]; // For select
 	validate?: (value: any) => string | null; // Custom validation, returns error string or null
 	initialValue?: any;
 }
@@ -45,10 +45,19 @@ const GeneralForm: React.FC<GeneralFormProps> = ({
 
 	const [formValues, setFormValues] = useState<Record<string, any>>(initialFormState);
 	const [errors, setErrors] = useState<Record<string, string>>({});
+	const [openFields, setOpenFields] = useState<Record<string, boolean>>({});
 
 	const handleChange = (name: string, value: any) => {
 		setFormValues((prev) => ({ ...prev, [name]: value }));
 		setErrors((prev) => ({ ...prev, [name]: "" }));
+	};
+
+	const handleOpen = (name: string) => {
+		setOpenFields((prev) => ({ ...prev, [name]: true }));
+	};
+
+	const handleClose = (name: string) => {
+		setOpenFields((prev) => ({ ...prev, [name]: false }));
 	};
 
 	const validateFields = (): boolean => {
@@ -101,11 +110,18 @@ const GeneralForm: React.FC<GeneralFormProps> = ({
 									labelId={`${field.name}-label`}
 									value={formValues[field.name]}
 									label={field.label}
+									open={openFields[field.name] || false}
+									onOpen={() => handleOpen(field.name)}
+									onClose={() => handleClose(field.name)}
 									onChange={(e) => {
 										if (field.name === "diagnosisCodes") {
 											handleChange(field.name, typeof e.target.value === "string" ? e.target.value.split(",") : e.target.value);
+											handleClose(field.name);
 										} else {
 											handleChange(field.name, e.target.value);
+											// Default select closes automatically, no need to force close unless controlled.
+											// But since we are controlling 'open', we should close it.
+											handleClose(field.name);
 										}
 									}}
 									multiple={field.name === "diagnosisCodes"}

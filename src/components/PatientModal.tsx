@@ -78,7 +78,12 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
   return (
     <Dialog 
       open={open}
-      onClose={onClose}
+      onClose={(event, reason) => {
+        if (reason !== "backdropClick") {
+          onClose();
+        }
+      }}
+      disableEscapeKeyDown
       maxWidth="lg"
       PaperProps={{
         style: { minWidth: '80vw', minHeight: 80 }

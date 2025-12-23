@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { 
 	Select, 
 	MenuItem, 
@@ -9,13 +8,9 @@ import {
 	SelectChangeEvent
 } from "@mui/material";
 import GeneralForm, { GeneralFormField } from "./common/generalForm";
-
-const DIAGNOSIS_CODES = [
-	{ value: "S62.5", label: "S62.5" },
-	{ value: "Z57.1", label: "Z57.1" },
-	{ value: "Z74.3", label: "Z74.3" },
-	{ value: "M51.2", label: "M51.2" },
-];
+import { Diagnosis } from "../types/patients";
+import { apiBaseUrl } from "../constants";
+import { healthCheckRatingOptions } from "../helpers/patients";
 
 const ENTRY_TYPES = [
 	{ value: "HealthCheck", label: "Health Check" },
@@ -23,7 +18,7 @@ const ENTRY_TYPES = [
 	{ value: "OccupationalHealthcare", label: "Occupational Healthcare" },
 ];
 
-const getFieldsForType = (type: string): GeneralFormField[] => {
+const getFieldsForType = (type: string, diagnosisOptions: { value: string; label: string }[]): GeneralFormField[] => {
 	const commonFields: GeneralFormField[] = [
 		{
 			name: "date",
@@ -49,7 +44,7 @@ const getFieldsForType = (type: string): GeneralFormField[] => {
 			label: "Diagnosis Codes",
 			type: "select",
 			required: true,
-			options: DIAGNOSIS_CODES,
+			options: diagnosisOptions,
 			initialValue: [],
 			validate: (value) => (Array.isArray(value) && value.length > 0 ? null : "Select at least one code"),
 		},
@@ -63,12 +58,7 @@ const getFieldsForType = (type: string): GeneralFormField[] => {
 				label: "Health Check Rating",
 				type: "select",
 				required: true,
-				options: [
-					{ value: 0, label: "Healthy" },
-					{ value: 1, label: "Low Risk" },
-					{ value: 2, label: "High Risk" },
-					{ value: 3, label: "Critical Risk" },
-				],
+				options: healthCheckRatingOptions,
 			},
 		];
 	}
@@ -122,35 +112,43 @@ const getFieldsForType = (type: string): GeneralFormField[] => {
 const AddPatientEntryForm: React.FC = () => {
 	const [entryType, setEntryType] = useState<string>("HealthCheck");
 	const [formKey, setFormKey] = useState<number>(0); // For resetting form
+	const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
+
+	useEffect(() => {
+		const fetchDiagnoses = async () => {
+			const response = await fetch(`${apiBaseUrl}/diagnoses`);
+			const diagnosesData = await response.json();
+			setDiagnoses(diagnosesData);
+		};
+		fetchDiagnoses();
+	}, []);
+
+	const diagnosisOptions = diagnoses.map((diagnosis) => ({
+		value: diagnosis.code,
+		label: diagnosis.name,
+	}));
+
+	const resetForm = () => {
+		setFormKey((prev) => prev + 1); // Reset form
+	};
 
 	const handleTypeChange = (e: SelectChangeEvent<string>) => {
 		setEntryType(e.target.value as string);
-		setFormKey((prev) => prev + 1); // Reset form
+		resetForm();
 	};
 
 	const handleSubmit = (values: Record<string, any>) => {
 		// Transform diagnosisCodes to array if not already
 		const entry = { type: entryType, ...values };
 		console.log("New entry:", entry);
-		setFormKey((prev) => prev + 1); // Reset form after submit
+		resetForm();
 	};
 
 	const handleCancel = () => {
-		setFormKey((prev) => prev + 1);
+		resetForm();
 	};
 
-
-	// Custom rendering for multiple select
-	const fields: GeneralFormField[] = getFieldsForType(entryType).map((field) => {
-		if (field.name === "diagnosisCodes") {
-			return {
-				...field,
-				type: "select" as const,
-				options: DIAGNOSIS_CODES,
-			};
-		}
-		return field;
-	});
+	const fields: GeneralFormField[] = getFieldsForType(entryType, diagnosisOptions);
 
 	return (
 		<Box border={1} borderRadius={2} borderColor="grey.400" p={2} mb={2}>
