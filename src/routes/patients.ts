@@ -26,3 +26,16 @@ patientsRouter.post('/', async (req, res) => {
   }
 });
 
+patientsRouter.post('/:id/entries', async (req, res) => {
+  try {
+    const newPatientEntry = await patientsService.addPatientEntry(req.params.id, req.body);
+    if (!newPatientEntry) {
+      res.status(404).send(`Patient with id ${req.params.id} not found`);
+    }
+    res.status(201).json(newPatientEntry);
+  } catch (error) {
+    res.status(400).json({ error: 'Invalid patient data' });
+  }
+});
+
+
