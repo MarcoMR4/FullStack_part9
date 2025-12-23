@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
+
 import { 
 	Select, 
 	MenuItem, 
@@ -8,7 +10,7 @@ import {
 	SelectChangeEvent
 } from "@mui/material";
 import GeneralForm, { GeneralFormField } from "./common/generalForm";
-import { Diagnosis } from "../types/patients";
+import { Diagnosis, Patient } from "../types/patients";
 import { apiBaseUrl } from "../constants";
 import { healthCheckRatingOptions } from "../helpers/patients";
 
@@ -109,7 +111,7 @@ const getFieldsForType = (type: string, diagnosisOptions: { value: string; label
 };
 
 
-const AddPatientEntryForm: React.FC = () => {
+const AddPatientEntryForm: React.FC<{patientId: string, onCreatePatientEntry: (patient: Patient) => void}> = ({patientId, onCreatePatientEntry}) => {
 	const [entryType, setEntryType] = useState<string>("HealthCheck");
 	const [formKey, setFormKey] = useState<number>(0); // For resetting form
 	const [diagnoses, setDiagnoses] = useState<Diagnosis[]>([]);
@@ -137,11 +139,17 @@ const AddPatientEntryForm: React.FC = () => {
 		resetForm();
 	};
 
-	const handleSubmit = (values: Record<string, any>) => {
+	const handleSubmit = async (values: Record<string, any>) => {
 		// Transform diagnosisCodes to array if not already
-		const entry = { type: entryType, ...values };
-		console.log("New entry:", entry);
-		resetForm();
+		const newEntry = { type: entryType, ...values };
+		try {
+			const response = await axios.post(`${apiBaseUrl}/patients/${patientId}/entries`, newEntry);
+			console.log("New entry added:", response.data);
+			resetForm();
+			onCreatePatientEntry(response.data);
+		} catch (error) {
+			console.error("Error adding entry:", error);
+		}
 	};
 
 	const handleCancel = () => {

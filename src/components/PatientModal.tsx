@@ -55,6 +55,12 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
   const [error, setError] = useState<string | null>(null);
   const [showEntryForm, setShowEntryForm] = useState(false);
 
+  const onCreatedPatientEntry = (updatedPatient: Patient) => {
+    console.log("New entry:", updatedPatient);
+    setPatient(updatedPatient);
+    setShowEntryForm(false);
+  };
+
   useEffect(() => {
     if (open && patientId) {
       setLoading(true);
@@ -117,7 +123,7 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
             </Button>
             {showEntryForm && (
               <div style={{ margin: '16px 0' }}>
-                <AddPatientEntryForm />
+                <AddPatientEntryForm patientId={patient.id} onCreatePatientEntry={onCreatedPatientEntry}/>
               </div>
             )}
             {patient.entries.length === 0 ? (
