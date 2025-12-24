@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from 'uuid';
 import { 
   Patient,
-  PatientFormValues ,
-  Entry
+  PatientFormValues,
+  Entry,
+  EntryWithoutId
 } from "../types/patients";
 import patients from "../../data/patients";
 
@@ -29,11 +30,17 @@ const addPatient = async (object: PatientFormValues) => {
   return newPatient;
 };
 
-const addPatientEntry = async (idPatient: string, entry: Entry) => {
+const addPatientEntry = async (idPatient: string, entry: EntryWithoutId) => {
   const patient = patients.find(p => p.id === idPatient);
   if (!patient) 
     return Promise.resolve(null);
-  patient.entries.push(entry);
+  
+  const newEntry: Entry = {
+    id: uuidv4(),
+    ...entry
+  };
+
+  patient.entries.push(newEntry);
   return Promise.resolve(patient);    
 };
 

@@ -141,7 +141,47 @@ const AddPatientEntryForm: React.FC<{patientId: string, onCreatePatientEntry: (p
 
 	const handleSubmit = async (values: Record<string, any>) => {
 		// Transform diagnosisCodes to array if not already
-		const newEntry = { type: entryType, ...values };
+		const baseEntry = {
+			date: values.date,
+			specialist: values.specialist,
+			description: values.description,
+			diagnosisCodes: values.diagnosisCodes,
+		};
+
+		let newEntry: any = { ...baseEntry, type: entryType };
+
+		switch (entryType) {
+			case "HealthCheck":
+				newEntry = {
+					...newEntry,
+					healthCheckRating: Number(values.healthCheckRating),
+				};
+				break;
+			case "Hospital":
+				newEntry = {
+					...newEntry,
+					discharge: {
+						date: values.dischargeDate,
+						criteria: values.dischargeCriteria,
+					},
+				};
+				break;
+			case "OccupationalHealthcare":
+				newEntry = {
+					...newEntry,
+					employerName: values.employerName,
+				};
+				if (values.sickLeaveStartDate && values.sickLeaveEndDate) {
+					newEntry.sickLeave = {
+						startDate: values.sickLeaveStartDate,
+						endDate: values.sickLeaveEndDate,
+					};
+				}
+				break;
+			default:
+				break;
+		}
+
 		try {
 			const response = await axios.post(`${apiBaseUrl}/patients/${patientId}/entries`, newEntry);
 			console.log("New entry added:", response.data);
