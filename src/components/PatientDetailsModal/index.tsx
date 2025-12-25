@@ -4,12 +4,12 @@ import React,
   useState 
 } from "react";
 import axios from "axios";
-import { apiBaseUrl } from "../constants";
+import { apiBaseUrl } from "../../constants";
 
 import { 
   Patient, 
   Gender
-} from "../types/patients";
+} from "../../types/patients";
 
 import {
   Dialog, 
@@ -49,7 +49,7 @@ const genderIcon = (gender: Gender) => {
   }
 };
 
-const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId, onPatientEntriesUpdate }) => {
+const PatientDetailsModal: React.FC<PatientModalProps> = ({ open, onClose, patientId, onPatientEntriesUpdate }) => {
 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(false);
@@ -150,4 +150,4 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId, o
   );
 };
 
-export default PatientModal;
+export default PatientDetailsModal;

@@ -17,11 +17,11 @@ import {
   Patient 
 } from "../../types/patients";
 import AddPatientModal from "../AddPatientModal";
-import PatientModal from "../PatientModal";
+import PatientDetailsModal from "../PatientDetailsModal";
 
 import { apiBaseUrl} from "../../constants";
 
-import HealthRatingBar from "../HealthRatingBar";
+import HealthRatingBar from "./HealthRatingBar";
 import { getAverageHealthCheckRating } from "../../helpers/patients";
 
 interface Props {
@@ -128,7 +128,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         error={error}
         onClose={closeModal}
       />
-      <PatientModal
+      <PatientDetailsModal
         open={patientModalOpen}
         onClose={closePatientModal}
         patientId={selectedPatientId}

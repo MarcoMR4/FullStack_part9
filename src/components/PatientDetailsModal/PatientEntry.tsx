@@ -9,8 +9,8 @@ import {
   HealthCheckEntry,
   HospitalEntry,
   OccupationalHealthcareEntry
-} from "../types/patients";
-import { healthCheckColor } from "../helpers/patients";
+} from "../../types/patients";
+import { healthCheckColor } from "../../helpers/patients";
 
 const renderDiagnosisCodes = (codes?: string[]) => {
   if (!codes || codes.length === 0) 

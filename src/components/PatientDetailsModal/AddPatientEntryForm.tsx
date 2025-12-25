@@ -9,10 +9,10 @@ import {
 	Box,
 	SelectChangeEvent
 } from "@mui/material";
-import GeneralForm, { GeneralFormField } from "./common/generalForm";
-import { Diagnosis, Patient } from "../types/patients";
-import { apiBaseUrl } from "../constants";
-import { healthCheckRatingOptions } from "../helpers/patients";
+import GeneralForm, { GeneralFormField } from "../common/generalForm";
+import { Diagnosis, Patient } from "../../types/patients";
+import { apiBaseUrl } from "../../constants";
+import { healthCheckRatingOptions } from "../../helpers/patients";
 
 const ENTRY_TYPES = [
 	{ value: "HealthCheck", label: "Health Check" },
