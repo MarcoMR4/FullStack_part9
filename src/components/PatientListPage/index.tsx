@@ -19,9 +19,10 @@ import {
 import AddPatientModal from "../AddPatientModal";
 import PatientModal from "../PatientModal";
 
-import HealthRatingBar from "../HealthRatingBar";
-
 import { apiBaseUrl} from "../../constants";
+
+import HealthRatingBar from "../HealthRatingBar";
+import { getAverageHealthCheckRating } from "../../helpers/patients";
 
 interface Props {
   patients : Patient[]
@@ -96,7 +97,13 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
               <TableCell>{patient.gender}</TableCell>
               <TableCell>{patient.occupation}</TableCell>
               <TableCell>
-                <HealthRatingBar showText={false} rating={1} />
+                {(() => {
+                  const avgRating = getAverageHealthCheckRating(patient);
+                  if (avgRating === null) {
+                    return <Typography variant="body2" color="textSecondary">No HealthCheck entries registered</Typography>;
+                  }
+                  return <HealthRatingBar showText={true} rating={avgRating - 1} />;
+                })()}
               </TableCell>
               <TableCell>
                 <Button variant="text" onClick={() => openPatientModal(patient.id)}>
