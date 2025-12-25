@@ -33,6 +33,7 @@ interface PatientModalProps {
   open: boolean;
   onClose: () => void;
   patientId: string | null;
+  onPatientEntriesUpdate?: (updatedPatient: Patient) => void;
 }
 
 const genderIcon = (gender: Gender) => {
@@ -48,7 +49,7 @@ const genderIcon = (gender: Gender) => {
   }
 };
 
-const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId }) => {
+const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId, onPatientEntriesUpdate }) => {
 
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(false);
@@ -59,6 +60,9 @@ const PatientModal: React.FC<PatientModalProps> = ({ open, onClose, patientId })
     console.log("New entry:", updatedPatient);
     setPatient(updatedPatient);
     setShowEntryForm(false);
+    if (onPatientEntriesUpdate) {
+      onPatientEntriesUpdate(updatedPatient);
+    }
   };
 
   useEffect(() => {

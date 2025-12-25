@@ -2,7 +2,7 @@ import { HealthCheckRating } from "../types/patients";
 import { HealthCheckEntry } from "../types/patients";
 import { Patient } from "../types/patients";
 
-export const healthCheckColor = (rating: number) => {
+export function healthCheckColor(rating: number) {
   switch (rating) {
     case HealthCheckRating.Healthy:
       return 'green';
@@ -15,7 +15,7 @@ export const healthCheckColor = (rating: number) => {
     default:
       return 'grey';
   }
-};
+}
 
 export const healthCheckRatingOptions = [
   { value: HealthCheckRating.Healthy, label: "Healthy" },

@@ -47,6 +47,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
     setSelectedPatientId(id);
     setPatientModalOpen(true);
   };
+  
   const closePatientModal = () => {
     setPatientModalOpen(false);
     setSelectedPatientId(null);
@@ -71,6 +72,13 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         setError("Unknown error");
       }
     }
+  };
+
+  // Update patient entries in the list when a new entry is added
+  const handlePatientEntriesUpdate = (updatedPatient: Patient) => {
+    setPatients((prevPatients) =>
+      prevPatients.map((p) => (p.id === updatedPatient.id ? updatedPatient : p))
+    );
   };
 
   return (
@@ -124,6 +132,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         open={patientModalOpen}
         onClose={closePatientModal}
         patientId={selectedPatientId}
+        onPatientEntriesUpdate={handlePatientEntriesUpdate}
       />
       <Button variant="contained" onClick={() => openModal()}>
         Add New Patient
