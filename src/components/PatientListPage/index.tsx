@@ -76,6 +76,12 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
 
   return (
     <div className="App">
+      <Button 
+        style={{ marginTop: "1em" }}
+        variant="contained" onClick={() => setAddPatientModalOpen(true)}
+      >
+        Add New Patient
+      </Button>
       <Box>
         <Typography align="center" variant="h6">
           Patient list
@@ -127,9 +133,6 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         patientId={selectedPatientId}
         onPatientEntriesUpdate={handlePatientEntriesUpdate}
       />
-      <Button variant="contained" onClick={() => setAddPatientModalOpen(true)}>
-        Add New Patient
-      </Button>
     </div>
   );
 };
