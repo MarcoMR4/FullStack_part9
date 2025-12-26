@@ -12,14 +12,14 @@ import {
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import axios from 'axios';
 
+import { apiBaseUrl} from "../../constants";
+
 import { 
   PatientFormValues, 
   Patient 
 } from "../../types/patients";
 import AddPatientModal from "../AddPatientModal";
 import PatientDetailsModal from "../PatientDetailsModal";
-
-import { apiBaseUrl} from "../../constants";
 
 import HealthRatingBar from "./HealthRatingBar";
 import { getAverageHealthCheckRating } from "../../helpers/patients";
@@ -31,25 +31,18 @@ interface Props {
 
 const PatientListPage = ({ patients, setPatients } : Props ) => {
 
-  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [addPatientModalOpen, setAddPatientModalOpen] = useState<boolean>(false);
   const [error, setError] = useState<string>();
   const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null);
-  const [patientModalOpen, setPatientModalOpen] = useState<boolean>(false);
+  const [patientDetailsModalOpen, setPatientDetailsModalOpen] = useState<boolean>(false);
 
-  const openModal = (): void => setModalOpen(true);
-
-  const closeModal = (): void => {
-    setModalOpen(false);
-    setError(undefined);
-  };
-
-  const openPatientModal = (id: string) => {
+  const openPatientDetailsModal  = (id: string) => {
     setSelectedPatientId(id);
-    setPatientModalOpen(true);
+    setPatientDetailsModalOpen(true);
   };
   
-  const closePatientModal = () => {
-    setPatientModalOpen(false);
+  const closePatientDetailsModal = () => {
+    setPatientDetailsModalOpen(false);
     setSelectedPatientId(null);
   };
 
@@ -57,7 +50,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
     try {
       const patient = await axios.post<Patient>(apiBaseUrl + "/patients", values);
       setPatients(patients.concat(patient.data));
-      setModalOpen(false);
+      setAddPatientModalOpen(false);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {
@@ -114,7 +107,7 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
                 })()}
               </TableCell>
               <TableCell>
-                <Button variant="text" onClick={() => openPatientModal(patient.id)}>
+                <Button variant="text" onClick={() => openPatientDetailsModal(patient.id)}>
                   {React.createElement(VisibilityIcon)}
                 </Button>
               </TableCell>
@@ -123,18 +116,18 @@ const PatientListPage = ({ patients, setPatients } : Props ) => {
         </TableBody>
       </Table>
       <AddPatientModal
-        modalOpen={modalOpen}
+        modalOpen={addPatientModalOpen}
         onSubmit={submitNewPatient}
         error={error}
-        onClose={closeModal}
+        onClose={() => setAddPatientModalOpen(false)}
       />
       <PatientDetailsModal
-        open={patientModalOpen}
-        onClose={closePatientModal}
+        open={patientDetailsModalOpen}
+        onClose={closePatientDetailsModal}
         patientId={selectedPatientId}
         onPatientEntriesUpdate={handlePatientEntriesUpdate}
       />
-      <Button variant="contained" onClick={() => openModal()}>
+      <Button variant="contained" onClick={() => setAddPatientModalOpen(true)}>
         Add New Patient
       </Button>
     </div>

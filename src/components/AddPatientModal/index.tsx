@@ -1,4 +1,10 @@
-import { Dialog, DialogTitle, DialogContent, Divider, Alert } from '@mui/material';
+import { 
+  Dialog, 
+  DialogTitle, 
+  DialogContent, 
+  Divider, 
+  Alert 
+} from '@mui/material';
 
 import AddPatientForm from "./AddPatientForm";
 import { PatientFormValues } from "../../types/patients";
